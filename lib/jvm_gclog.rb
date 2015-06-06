@@ -12,7 +12,7 @@ class JVMGCLog
   def parse(line)
     record = Hash.new
     m = line.match(/^(?<time>[^ ]+): (?<uptime>[\d\.]+): (?<body>.+)$/)
-    time = Time.parse(m[:time]).to_i
+    record["time"] = Time.parse(m[:time]).to_i
     record["uptime"] = adjust_type(m["uptime"])
     
     post_times = m[:body].match(/ \[Times: user=(?<gctime_user>[\d\.]+) sys=(?<gctime_sys>[\d\.]+), real=(?<gctime_real>[\d\.]+) secs\] *$/)
@@ -54,10 +54,6 @@ class JVMGCLog
         end
       }    
     end
-    if block_given?
-      yield time, record
-    else
-      return time, record
-    end
+    return record
   end
 end
