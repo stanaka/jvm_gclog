@@ -19,6 +19,7 @@ record = {
   "gctime_sys"=> 0.00,
   "gctime_real" => 0.69,
 }
+```
 
 ## Support options
 
