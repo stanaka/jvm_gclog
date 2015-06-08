@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require "spec_helper"
+require "pp"
 
 describe "JVMGCLog" do
   before :each do
@@ -154,6 +155,63 @@ describe "JVMGCLog" do
           expect(@r["gctime_real"]).to eq 0.02
         end
       end
+
+      describe "G1GC-gc-logs" do
+        before :each do
+          @lines = <<-EOS
+2015-06-08T08:50:09.784+0900: 3836239.602: Total time for which application threads were stopped: 0.0001872 seconds, Stopping threads took: 0.0000284 seconds
+2015-06-08T08:50:35.705+0900: 3836265.524: [GC pause (G1 Evacuation Pause) (young)
+Desired survivor size 20447232 bytes, new threshold 15 (max 15)
+- age   1:    1151320 bytes,    1151320 total
+- age   2:     235344 bytes,    1386664 total
+- age   3:        144 bytes,    1386808 total
+- age   4:         24 bytes,    1386832 total
+- age   5:         24 bytes,    1386856 total
+- age   6:         24 bytes,    1386880 total
+- age   9:        336 bytes,    1387216 total
+- age  11:        264 bytes,    1387480 total
+, 0.0042488 secs]
+   [Parallel Time: 3.7 ms, GC Workers: 1]
+      [GC Worker Start (ms):  3836265523.9]
+      [Ext Root Scanning (ms):  1.6]
+      [Update RS (ms):  0.5]
+         [Processed Buffers:  19]
+      [Scan RS (ms):  0.2]
+      [Code Root Scanning (ms):  0.0]
+      [Object Copy (ms):  1.4]
+      [Termination (ms):  0.0]
+      [GC Worker Other (ms):  0.0]
+      [GC Worker Total (ms):  3.7]
+      [GC Worker End (ms):  3836265527.6]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.1 ms]
+   [Other: 0.4 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.1 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.0 ms]
+      [Humongous Reclaim: 0.0 ms]
+      [Free CSet: 0.1 ms]
+   [Eden: 305.0M(305.0M)->0.0B(304.0M) Survivors: 2048.0K->3072.0K Heap: 374.6M(512.0M)->70.6M(512.0M)]
+ [Times: user=0.01 sys=0.00, real=0.01 secs] 
+2015-06-08T08:50:35.710+0900: 3836265.528: Total time for which application threads were stopped: 0.0045965 seconds, Stopping threads took: 0.0000778 seconds
+2015-06-08T08:50:39.132+0900: 3836268.951: Total time for which application threads were stopped: 0.0001548 seconds, Stopping threads took: 0.0000248 seconds
+          EOS
+          @records = @jvmgclog.split(@lines.split(/\n/))
+          @r = @jvmgclog.parse_g1_records(@records)
+          @r
+        end
+
+        it "should have expected values" do
+          expect(@r.length).to eq 1
+          expect(@r[0]["eden_before"]).to eq "305.0M"
+          expect(@r[0]["gctime_user"]).to eq 0.01
+          expect(@r[0]["gctime_sys"]).to eq 0.0
+          expect(@r[0]["gctime_real"]).to eq 0.01
+        end
+      end
+
       
     end
   end
