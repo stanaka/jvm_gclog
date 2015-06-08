@@ -198,9 +198,8 @@ Desired survivor size 20447232 bytes, new threshold 15 (max 15)
 2015-06-08T08:50:35.710+0900: 3836265.528: Total time for which application threads were stopped: 0.0045965 seconds, Stopping threads took: 0.0000778 seconds
 2015-06-08T08:50:39.132+0900: 3836268.951: Total time for which application threads were stopped: 0.0001548 seconds, Stopping threads took: 0.0000248 seconds
           EOS
-          @records = @jvmgclog.split(@lines.split(/\n/))
-          @r = @jvmgclog.parse_g1_records(@records)
-          @r
+          @records = @jvmgclog.recognize_chunks(@lines.split(/\n/))
+          @r = @jvmgclog.parse_chunks(@records)
         end
 
         it "should have expected values" do
