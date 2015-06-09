@@ -59,3 +59,19 @@ Java HotSpot(TM) 64-Bit Server VM (build 24.65-b04, mixed mode)
 -XX:NumberOfGCLogFiles=5
 -XX:GCLogFileSize=10M
 ```
+
+### java 1.7 default
+```
+% java -version
+java version "1.7.0_65"
+Java(TM) SE Runtime Environment (build 1.7.0_65-b17)
+Java HotSpot(TM) 64-Bit Server VM (build 24.65-b04, mixed mode)
+```
+
+```
+-XX:+PrintGCDetails
+-XX:+PrintGCDateStamps
+-XX:+UseGCLogFileRotation
+-XX:NumberOfGCLogFiles=5
+-XX:GCLogFileSize=10M
+```

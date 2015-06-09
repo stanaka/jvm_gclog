@@ -95,6 +95,11 @@ class JVMGCLog
       record.update(match_fields_to_hash(m))
       record["type"] = "YoungGC"
 
+    when /^\[GC \[PSYoungGen: (?<new_before>\d+)K-\>(?<new_after>\d+)K\((?<new_total>\d+)K\)\] (?<heap_before>\d+)K\-\>(?<heap_after>\d+)K\((?<heap_total>\d+)K\), (?<gctime>[\d\.]+) secs\]/
+      m = Regexp.last_match
+      record.update(match_fields_to_hash(m))
+      record["type"] = "YoungGC"
+      
     when /^\[GC \[1 CMS-initial-mark: (?<old_before>\d+)K\((?<old_threshold>\d+)K\)\] (?<heap_before>\d+)K\((?<heap_total>\d+)K\), (?<gctime>[\d\.]+) secs\]/
       m = Regexp.last_match
       record.update(match_fields_to_hash(m))

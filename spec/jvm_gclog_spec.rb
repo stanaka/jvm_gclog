@@ -34,6 +34,28 @@ describe "JVMGCLog" do
         end
       end
 
+      describe "PSYoungGC" do
+        before :each do
+          @line = "2015-06-09T14:07:53.277+0900: 85.918: [GC [PSYoungGen: 1341440K->8288K(1363968K)] 1369721K->39174K(4160512K), 0.0181530 secs] [Times: user=0.08 sys=0.01, real=0.02 secs] "
+          @r = @jvmgclog.parse(@line)
+        end
+
+        it "should have expected values" do
+          expect(@r["time"]).to eq 1433826473
+          expect(@r["type"]).to eq "YoungGC"
+          expect(@r["uptime"]).to eq 85.918
+          expect(@r["new_before"]).to eq 1341440
+          expect(@r["new_after"]).to eq 8288
+          expect(@r["new_total"]).to eq 1363968
+          expect(@r["heap_before"]).to eq 1369721
+          expect(@r["heap_after"]).to eq 39174
+          expect(@r["heap_total"]).to eq 4160512
+          expect(@r["gctime_user"]).to eq 0.08
+          expect(@r["gctime_sys"]).to eq 0.01
+          expect(@r["gctime_real"]).to eq 0.02
+        end
+      end
+      
       describe "CMS-initial-mark" do
         before :each do
           @line = "2015-06-05T13:15:27.747+0900: 44.239: [GC [1 CMS-initial-mark: 0K(3086784K)] 445450K(4083584K), 0.0298540 secs] [Times: user=0.04 sys=0.00, real=0.04 secs] "
