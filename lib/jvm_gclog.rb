@@ -65,6 +65,11 @@ class JVMGCLog
     record = {}
     m = @regexp_prefix.match(data[0])
     body = $'
+    unless m
+      record["type"] = "Unknown"
+      record["unknown"] = data.join(" ")
+      return record
+    end
 
     record["time"] = Time.parse(m[:time]).to_i
     record["uptime"] = adjust_type(m["uptime"])
@@ -78,10 +83,11 @@ class JVMGCLog
         /\[Times: user=(?<gctime_user>[\d\.]+) sys=(?<gctime_sys>[\d\.]+), real=(?<gctime_real>[\d\.]+) secs\]/
       ]
       fields.each { |f|
-        fields_match = f.match(line)
-        fields_match.names.each {|name|
-          record[name] = adjust_type(fields_match[name])
-        }
+        if fields_match = f.match(line)
+          fields_match.names.each {|name|
+            record[name] = adjust_type(fields_match[name])
+          }
+        end
       }
       record["type"] = "G1GC"
       return record
