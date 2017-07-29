@@ -135,7 +135,7 @@ class JVMGCLog
       record["unknown"] = body
     end
 
-    if m = $'.match('\[Times: user=(?<gctime_user>[\d\.]+) sys=(?<gctime_sys>[\d\.]+), real=(?<gctime_real>[\d\.]+) secs\]')
+    if $' != nil && m = $'.match('\[Times: user=(?<gctime_user>[\d\.]+) sys=(?<gctime_sys>[\d\.]+), real=(?<gctime_real>[\d\.]+) secs\]')
       record.update(match_fields_to_hash(m))
     end
 
